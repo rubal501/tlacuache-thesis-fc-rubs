@@ -18,7 +18,10 @@
   titulo: [Titulo],
   grado: [Licenciatura],
   autor: [Autor],
-  asesor: [Asesor],
+  asesor: (
+    nombre: "Nombre",
+    genero: "fem"
+  ),
   lugar: [Ciudad de México, México],
   agno: [#datetime.today().year()],
   bibliography: [],
@@ -26,6 +29,15 @@
 )={
   // configuración páginas y contadores
   set document(title: titulo)
+
+  let asesor-texto = if asesor.at("genero", default: "fem") == "fem" {
+    "DIRECTORA DE TESIS"
+  } else if asesor.at("genero", default: "fem") == "masc" {
+    "DIRECTOR DE TESIS"
+  } else {
+    "DIRECTORX DE TESIS"
+  }
+
   set page("us-letter", margin: (top: 4cm, bottom: 2cm), header: context{
     if here().page() == 1 {
       return
@@ -54,8 +66,10 @@
   place(line(length: 70%, start: (30%, 10%), stroke: 3pt))
   place(line(length: 70%, start: (30%, 13%)))
 
+  place(line(length: 60%, start: (7%, 20%), angle: 90deg))
   place(line(length: 60%, start: (10%, 20%), angle: 90deg, stroke: 3pt))
   place(line(length: 60%, start: (13%, 20%), angle: 90deg))
+
 
   place(image("./escudos/UNAM_crest_black.svg", width: 100pt))
   place(bottom, image("./escudos/FC_crest_black.svg", width: 100pt))
@@ -84,9 +98,9 @@
     #autor
 
     #v(1cm)
-    #upper([DIRECTOR DE TESIS:])
+    #upper(asesor-texto)
 
-    #asesor
+    #asesor.nombre
 
     #v(1cm)
     #lugar, #agno.
